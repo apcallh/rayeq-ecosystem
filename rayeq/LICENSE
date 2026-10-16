@@ -1,0 +1,6 @@
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+
+The `:library` module (`com.lagradost.cloudstream3.*`) is derived from CloudStream 4.8.0
+and is licensed under the GNU General Public License v3.0 (GPL-3.0).
+Font assets in `app/src/main/res/font` are licensed under the SIL Open Font License 1.1 (OFL-1.1).

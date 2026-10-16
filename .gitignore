@@ -1,0 +1,16 @@
+# Keystores & secrets
+*.jks
+*.keystore
+local.properties
+.dev.vars
+.wrangler/
+
+# Build outputs & dependencies
+build/
+.gradle/
+node_modules/
+dist/
+releases/*.idsig
+*.apk
+*.ap_
+build.log

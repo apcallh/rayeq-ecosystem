@@ -1,0 +1,74 @@
+name: Build Rayeq & Admin Signed APKs
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+    inputs:
+      server_url:
+        description: 'رابط الخادم (Cloudflare Worker URL)'
+        required: true
+        default: 'https://rayeq-api.example.workers.dev'
+      google_web_client_id:
+        description: 'معرّف Google Web Client ID'
+        required: false
+        default: 'YOUR_GOOGLE_WEB_CLIENT_ID'
+
+jobs:
+  build-apks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.1.0'
+
+      - name: Generate Signing Keystores
+        run: |
+          keytool -genkeypair -v -keystore "$RUNNER_TEMP/rayeq.jks" -alias rayeq -keyalg RSA -keysize 2048 -validity 10000 -storepass RayeqPass123 -keypass RayeqPass123 -dname "CN=Rayeq, OU=App, O=Rayeq, L=Doha, S=Qatar, C=QA"
+          keytool -genkeypair -v -keystore "$RUNNER_TEMP/rayeq-admin.jks" -alias rayeq-admin -keyalg RSA -keysize 2048 -validity 10000 -storepass RayeqPass123 -keypass RayeqPass123 -dname "CN=RayeqAdmin, OU=App, O=Rayeq, L=Doha, S=Qatar, C=QA"
+
+      - name: Build Rayeq Admin APK
+        working-directory: rayeq-admin
+        env:
+          RAYEQ_ADMIN_KEYSTORE_PATH: ${{ runner.temp }}/rayeq-admin.jks
+          RAYEQ_STORE_PASSWORD: RayeqPass123
+          RAYEQ_KEY_ALIAS: rayeq-admin
+          RAYEQ_KEY_PASSWORD: RayeqPass123
+        run: |
+          SRV_URL="${{ inputs.server_url || 'https://rayeq-api.example.workers.dev' }}"
+          gradle :app:assembleRelease -PRAYEQ_SERVER_URL="$SRV_URL" -PRAYEQ_VERSION_NAME="1.0.0" -PRAYEQ_VERSION_CODE="1"
+          mkdir -p ../releases
+          cp app/build/outputs/apk/release/*.apk ../releases/Rayeq-Admin-v1.0.0.apk
+
+      - name: Build Rayeq Viewer APK
+        working-directory: rayeq
+        env:
+          KEYSTORE_PATH: ${{ runner.temp }}/rayeq.jks
+          RAYEQ_STORE_PASSWORD: RayeqPass123
+          RAYEQ_KEY_ALIAS: rayeq
+          RAYEQ_KEY_PASSWORD: RayeqPass123
+        run: |
+          SRV_URL="${{ inputs.server_url || 'https://rayeq-api.example.workers.dev' }}"
+          G_CLIENT="${{ inputs.google_web_client_id || 'YOUR_GOOGLE_WEB_CLIENT_ID' }}"
+          gradle :app:assembleRelease -PRAYEQ_SERVER_URL="$SRV_URL" -PRAYEQ_GOOGLE_WEB_CLIENT_ID="$G_CLIENT" -PRAYEQ_VERSION_NAME="1.0.0" -PRAYEQ_VERSION_CODE="1"
+          mkdir -p ../releases
+          cp app/build/outputs/apk/release/*.apk ../releases/Rayeq-v1.0.0.apk
+
+      - name: Upload Signed APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Rayeq-Signed-APKs-v1.0.0
+          path: releases/*.apk
