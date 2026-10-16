@@ -1,5 +1,6 @@
 package com.lagradost.cloudstream3
 
+import java.util.EnumSet
 import java.util.concurrent.CopyOnWriteArrayList
 
 enum class TvType {
