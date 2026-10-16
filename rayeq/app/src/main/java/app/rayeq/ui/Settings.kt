@@ -151,8 +151,7 @@ fun SettingsScreen(settings: AppSettings, authState: AuthState) {
             title = { Text("التراخيص مفتوحة المصدر") },
             text = {
                 Text(
-                    "• وحدة مكتبة الإضافات (:library) مشتقة من مشروع CloudStream 4.8.0 ومرخصة بموجب رخصة GNU General Public License v3.0 (GPL-3.0).
-" +
+                    "• وحدة مكتبة الإضافات (:library) مشتقة من مشروع CloudStream 4.8.0 ومرخصة بموجب رخصة GNU General Public License v3.0 (GPL-3.0).\n" +
                     "• الخطوط العربية المضمنة (IBM Plex Sans Arabic, Tajawal, Almarai, Noto Naskh Arabic, Cairo) مرخصة بموجب SIL Open Font License 1.1 (OFL-1.1)."
                 )
             },

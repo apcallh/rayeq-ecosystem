@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.rayeq.auth.Auth
+import app.rayeq.auth.AuthState
 import app.rayeq.auth.Gate
 import app.rayeq.data.*
 import app.rayeq.player.PlayerActivity

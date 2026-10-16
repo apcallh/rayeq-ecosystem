@@ -24,17 +24,17 @@ object StickyServer {
         if (raw.isNullOrBlank()) return ""
         var s = ArabicDigits.toAsciiDigits(raw).lowercase()
         // حذف S01E05
-        s = s.replace(Regex("\bs\d{1,2}\s*e\d{1,4}\b"), " ")
+        s = s.replace(Regex("\\bs\\d{1,2}\\s*e\\d{1,4}\\b"), " ")
         // حذف علامات الحلقة والموسم
-        s = s.replace(Regex("(الحلقة|حلقة|episode|ep|e)\s*\d{1,4}\b"), " ")
-        s = s.replace(Regex("(الموسم|موسم|season)\s*\d{1,2}\b"), " ")
+        s = s.replace(Regex("(الحلقة|حلقة|episode|ep|e)\\s*\\d{1,4}\\b"), " ")
+        s = s.replace(Regex("(الموسم|موسم|season)\\s*\\d{1,2}\\b"), " ")
         // حذف أرقام الجودة وكلماتها
-        s = s.replace(Regex("(?<!\d)(4320|2160|1440|1080|720|576|480|360|240)[pi]?\b"), " ")
-        s = s.replace(Regex("\b(4k|2k|uhd|qhd|fhd|full\s*hd|hd|sd|hq|lq)\b"), " ")
+        s = s.replace(Regex("(?<!\\d)(4320|2160|1440|1080|720|576|480|360|240)[pi]?\\b"), " ")
+        s = s.replace(Regex("\\b(4k|2k|uhd|qhd|fhd|full\\s*hd|hd|sd|hq|lq)\\b"), " ")
         s = s.replace(Regex("(جودة|فائقة|الترا|ألترا|عالية|مرتفعة|متوسطة|منخفضة|ضعيفة|سيئة)"), " ")
         // حذف الرقم المنفرد الذي يساوي رقم الحلقة الحالية (مثل "Host 05" في الحلقة 5)
         if (currentEpisode != null && currentEpisode > 0) {
-            s = s.replace(Regex("(?<!\d)0*${currentEpisode}(?!\d)"), " ")
+            s = s.replace(Regex("(?<!\\d)0*${currentEpisode}(?!\\d)"), " ")
         }
         return s.replace(Regex("[^a-z0-9\u0621-\u064A]+"), "").trim()
     }

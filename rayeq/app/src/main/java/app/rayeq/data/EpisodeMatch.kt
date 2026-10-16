@@ -9,10 +9,10 @@ data class EpCandidate(
 
 object EpisodeMatch {
     private val EP_NAME_RE = Regex(
-        "(?:الحلقة|حلقة|episode|ep|e)\s*0*(\d{1,4})\b",
+        "(?:الحلقة|حلقة|episode|ep|e)\\s*0*(\\d{1,4})\\b",
         RegexOption.IGNORE_CASE
     )
-    private val BARE_NUM_RE = Regex("^\s*0*(\d{1,4})\s*$")
+    private val BARE_NUM_RE = Regex("^\\s*0*(\\d{1,4})\\s*$")
 
     fun extractEpisodeNumberFromName(name: String?): Int? {
         if (name.isNullOrBlank()) return null

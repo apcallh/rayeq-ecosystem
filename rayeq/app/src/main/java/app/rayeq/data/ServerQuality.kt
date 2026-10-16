@@ -156,12 +156,12 @@ object LiveDetect {
 
 object LinkQuality {
     private val TIERS = listOf(4320, 2160, 1440, 1080, 720, 480, 360, 240)
-    private val EXPLICIT_RE = Regex("(?<!\d)(4320|2160|1440|1080|720|576|480|360|240)[pi]\b", RegexOption.IGNORE_CASE)
-    private val DIM_RE = Regex("\b(\d{3,4})\s*[x×]\s*(\d{3,4})\b", RegexOption.IGNORE_CASE)
-    private val BARE_RE = Regex("(?<!\d)(2160|1440|1080|720|480|360)(?!\d)")
-    private val URL_PATH_RE = Regex("(?:/|_|-|\.)(2160|1440|1080|720|480|360)[pi]?(?:/|_|\.|-|$)", RegexOption.IGNORE_CASE)
+    private val EXPLICIT_RE = Regex("(?<!\\d)(4320|2160|1440|1080|720|576|480|360|240)[pi]\\b", RegexOption.IGNORE_CASE)
+    private val DIM_RE = Regex("\\b(\\d{3,4})\\s*[x×]\\s*(\\d{3,4})\\b", RegexOption.IGNORE_CASE)
+    private val BARE_RE = Regex("(?<!\\d)(2160|1440|1080|720|480|360)(?!\\d)")
+    private val URL_PATH_RE = Regex("(?:/|_|-|\\.)(2160|1440|1080|720|480|360)[pi]?(?:/|_|\\.|-|$)", RegexOption.IGNORE_CASE)
     private val URL_QUERY_RE = Regex("(?:^|[?&])(?:q|quality)=(2160|1440|1080|720|480|360)[pi]?(?:&|$)", RegexOption.IGNORE_CASE)
-    private val HLS_RES_RE = Regex("RESOLUTION=(\d+)x(\d+)", RegexOption.IGNORE_CASE)
+    private val HLS_RES_RE = Regex("RESOLUTION=(\\d+)x(\\d+)", RegexOption.IGNORE_CASE)
 
     /**
      * فخ CloudStream: Qualities.Unknown = 400، وكثير من الإضافات تضع 360 أو 400 افتراضياً.
@@ -181,11 +181,11 @@ object LinkQuality {
             val h = m.groupValues[2].toIntOrNull() ?: 0
             if (w > 0 && h > 0) return fromVideo(w, h)
         }
-        if (Regex("\b(4k|uhd)\b").containsMatchIn(s)) return 2160
-        if (Regex("\b(2k|qhd)\b").containsMatchIn(s)) return 1440
-        if (Regex("\b(fhd|full\s*hd)\b").containsMatchIn(s)) return 1080
-        if (Regex("\bhd\b").containsMatchIn(s)) return 720
-        if (Regex("\bsd\b").containsMatchIn(s)) return 480
+        if (Regex("\\b(4k|uhd)\\b").containsMatchIn(s)) return 2160
+        if (Regex("\\b(2k|qhd)\\b").containsMatchIn(s)) return 1440
+        if (Regex("\\b(fhd|full\\s*hd)\\b").containsMatchIn(s)) return 1080
+        if (Regex("\\bhd\\b").containsMatchIn(s)) return 720
+        if (Regex("\\bsd\\b").containsMatchIn(s)) return 480
 
         // الكلمات العربية
         if (s.contains("فائقة") || s.contains("الترا") || s.contains("ألترا")) return 2160
@@ -259,7 +259,7 @@ object LinkQuality {
         return ascii
             .replace(EXPLICIT_RE, " ")
             .replace(BARE_RE, " ")
-            .replace(Regex("\b(4k|2k|uhd|qhd|fhd|full\s*hd|hd|sd|hq|lq)\b"), " ")
+            .replace(Regex("\\b(4k|2k|uhd|qhd|fhd|full\\s*hd|hd|sd|hq|lq)\\b"), " ")
             .replace(Regex("(فائقة|الترا|ألترا|عالية|مرتفعة|متوسطة|منخفضة|ضعيفة|سيئة|جودة)"), " ")
             .replace(Regex("[^a-z0-9\u0621-\u064A]+"), " ")
             .trim()

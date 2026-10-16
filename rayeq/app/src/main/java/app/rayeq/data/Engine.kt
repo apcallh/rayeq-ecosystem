@@ -48,19 +48,19 @@ object Engine {
     private val idTemplates = ConcurrentHashMap<String, String>()
 
     private val SITE_NOISE_RE = Regex(
-        "\b(مسلسل|فيلم|انمي|أنمي|مترجم|مدبلج|اون\s*لاين|أونلاين|اونلاين|كامل|بجودة|عالية|حصريا|حصرياً|مشاهدة|تحميل|الموسم|موسم|الحلقة|حلقة|season|episode|ep|hd|fhd|4k|1080p|720p|bluray|web-dl|webrip|tv\s*series|movie)\b",
+        "\\b(مسلسل|فيلم|انمي|أنمي|مترجم|مدبلج|اون\\s*لاين|أونلاين|اونلاين|كامل|بجودة|عالية|حصريا|حصرياً|مشاهدة|تحميل|الموسم|موسم|الحلقة|حلقة|season|episode|ep|hd|fhd|4k|1080p|720p|bluray|web-dl|webrip|tv\\s*series|movie)\\b",
         RegexOption.IGNORE_CASE
     )
     private val SEASON_IN_NAME_RE = Regex(
-        "(?:الموسم|موسم|season|\bs)\s*0*(\d{1,2})\b",
+        "(?:الموسم|موسم|season|\\bs)\\s*0*(\\d{1,2})\\b",
         RegexOption.IGNORE_CASE
     )
     private val EPISODE_IN_NAME_RE = Regex(
-        "(?:الحلقة|حلقة|episode|\bep|\be)\s*0*(\d{1,4})\b",
+        "(?:الحلقة|حلقة|episode|\\bep|\\be)\\s*0*(\\d{1,4})\\b",
         RegexOption.IGNORE_CASE
     )
     private val LIVE_ACTION_RE = Regex(
-        "(live\s*-?\s*action|لايف\s*اكشن|لايف\s*أكشن|واقعي)",
+        "(live\\s*-?\\s*action|لايف\\s*اكشن|لايف\\s*أكشن|واقعي)",
         RegexOption.IGNORE_CASE
     )
 
@@ -70,17 +70,17 @@ object Engine {
             .replace(SEASON_IN_NAME_RE, " ")
             .replace(EPISODE_IN_NAME_RE, " ")
             .replace(SITE_NOISE_RE, " ")
-            .replace(Regex("\b(19\d{2}|20\d{2})\b"), " ")
+            .replace(Regex("\\b(19\\d{2}|20\\d{2})\\b"), " ")
             .replace(Regex("[^a-z0-9\u0621-\u064A]+"), " ")
-            .replace(Regex("\s+"), " ")
+            .replace(Regex("\\s+"), " ")
             .trim()
     }
 
     fun splitDualScript(raw: String): List<String> {
         val cleaned = cleanTitle(raw)
         if (cleaned.isEmpty()) return emptyList()
-        val arPart = cleaned.replace(Regex("[a-z]+"), " ").replace(Regex("\s+"), " ").trim()
-        val latPart = cleaned.replace(Regex("[\u0621-\u064A]+"), " ").replace(Regex("\s+"), " ").trim()
+        val arPart = cleaned.replace(Regex("[a-z]+"), " ").replace(Regex("\\s+"), " ").trim()
+        val latPart = cleaned.replace(Regex("[\u0621-\u064A]+"), " ").replace(Regex("\\s+"), " ").trim()
         return listOf(cleaned, arPart, latPart).filter { it.length >= 2 }.distinct()
     }
 
@@ -109,11 +109,11 @@ object Engine {
         val s = ArabicDigits.toAsciiDigits(rawName).lowercase()
         if (SEASON_IN_NAME_RE.containsMatchIn(s) ||
             EPISODE_IN_NAME_RE.containsMatchIn(s) ||
-            Regex("\b(مسلسل|انمي|أنمي|tv\s*series|series|season)\b").containsMatchIn(s)
+            Regex("\\b(مسلسل|انمي|أنمي|tv\\s*series|series|season)\\b").containsMatchIn(s)
         ) {
             return "tv"
         }
-        if (Regex("\b(فيلم|فلم|movie|film)\b").containsMatchIn(s)) {
+        if (Regex("\\b(فيلم|فلم|movie|film)\\b").containsMatchIn(s)) {
             return "movie"
         }
         return null

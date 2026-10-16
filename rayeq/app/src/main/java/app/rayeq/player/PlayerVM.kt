@@ -8,6 +8,7 @@ import androidx.media3.common.*
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
+import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
@@ -75,7 +76,7 @@ class PlayerVM : ViewModel() {
             .build()
 
         val renderersFactory = NextRenderersFactory(context.applicationContext)
-            .setExtensionRendererMode(NextRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
+            .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
 
         val player = ExoPlayer.Builder(context.applicationContext, renderersFactory)
             .setLoadControl(loadControl)

@@ -294,12 +294,12 @@ object CloudSync {
     fun mapSyncKeyToLocalEpKey(syncKey: String): String? {
         // tmdb:tv:1399:s1e3 -> tv:1399:1:3
         // tmdb:movie:550 -> movie:550
-        val tvMatch = Regex("^tmdb:tv:(\d+):s(\d+)e(\d+)$").find(syncKey)
+        val tvMatch = Regex("^tmdb:tv:(\\d+):s(\\d+)e(\\d+)$").find(syncKey)
         if (tvMatch != null) {
             val (id, s, e) = tvMatch.destructured
             return "tv:$id:$s:$e"
         }
-        val movieMatch = Regex("^tmdb:movie:(\d+)$").find(syncKey)
+        val movieMatch = Regex("^tmdb:movie:(\\d+)$").find(syncKey)
         if (movieMatch != null) {
             return "movie:${movieMatch.groupValues[1]}"
         }
