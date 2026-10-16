@@ -26,7 +26,7 @@ val versionCodeArg = propOrEnv("RAYEQ_VERSION_CODE", "1").toIntOrNull() ?: 1
 
 android {
     namespace = "app.rayeq"
-    compileSdk = 37
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "app.rayeq.watch"
